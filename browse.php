@@ -46,6 +46,12 @@ $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error(
 			<?php
 			mysqli_data_seek($auctionItemResult,0);//return to 0th index
 			while($row = mysqli_fetch_array($auctionItemResult)){
+
+				$auctionID = $row['auctionID'];
+				$highestBidQuery = "SELECT `bidPrice` FROM `bids` WHERE auctionID = '$auctionID' ORDER BY bidPrice DESC LIMIT 1";
+				$highestBidResult = mysqli_query($conn, $highestBidQuery);
+				$highestBid = mysqli_fetch_array($highestBidResult);
+				
 				echo '<tr>';
 				echo '<td>'.$row['itemName'].'</td>';
 				echo '<td>'.$row['datePosted'].'</td>';
@@ -53,7 +59,7 @@ $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error(
 				echo '<td>'.$row['startPrice'].'</td>';
 				echo '<td>'.$row['description'].'</td>';
 				echo '<td>'.$row['bids'].'</td>';
-				echo '<td>highest bid here</td>';
+				echo '<td>'.$highestBid[0].'</td>';
 				echo '<td><a class = "btn btn-success" href = "placeBid.php?auctionID='.$row['auctionID'].'">Bid</a></td>';
 				echo '</tr>';
 			}

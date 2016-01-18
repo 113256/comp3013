@@ -17,6 +17,15 @@ if(empty($_SESSION['user']))
 }
 if(isset($_GET['auctionID'])){
 	$auctionID = $_GET['auctionID'];
+
+	$auctionItemQuery = "SELECT datePosted, startPrice, endDate, bids, i.itemName, i.description FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID WHERE a.auctionID = '$auctionID'";
+	$auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error($conn));
+	$auctionItemRow = mysqli_fetch_array($auctionItemResult);
+
+	$highestBidQuery = "SELECT `bidPrice` FROM `bids` WHERE auctionID = '$auctionID' ORDER BY bidPrice DESC LIMIT 1";
+	$highestBidResult = mysqli_query($conn, $highestBidQuery);
+	$highestBid = mysqli_fetch_array($highestBidResult);
+
 } 
 
 ?>
@@ -25,6 +34,15 @@ if(isset($_GET['auctionID'])){
 	<section>
 		<div class = "jumbotron">
 		<h1>Bid</h1>
+
+		<ul class="list-group">
+		  <li class="list-group-item">Item name: <?php echo $auctionItemRow['itemName'];?> </li>
+		  <li class="list-group-item">Start price: <?php echo $auctionItemRow['startPrice'];?></li>
+		  <li class="list-group-item">Description: <?php echo $auctionItemRow['description'];?></li>
+		  <li class="list-group-item">Highest bid: <?php echo $highestBid[0];?></li>
+		  <li class="list-group-item">End date: <?php echo $auctionItemRow['endDate'];?></li>
+		</ul>
+
 		<a href = "dashboard.php" class = "btn btn-success">Back</a>
 		</div>
 	</section>
@@ -39,23 +57,33 @@ if(isset($_POST['placeBid'])){
 	$bidDate = $date = date('Y-m-d');	
 	$bidPrice = $_POST['bidPrice'];
 
-
-	$bidQuery = "INSERT INTO `bids` (`auctionID`, `userId`, `bidPrice`, `bidDate`) VALUES ('$auctionID', '$userId', '$bidPrice', '$bidDate')";
-	//update auction bid count
-	$updateQuery = "UPDATE `auction` SET bids = bids+1 WHERE auctionID='$auctionID'";
-
-	if(mysqli_query($conn, $bidQuery) && mysqli_query($conn, $updateQuery)){
+	if($bidPrice <= $auctionItemRow['startPrice']){
 		echo '
-			<div class = "alert alert-success">
-				Bid successful
+			<div class = "alert alert-danger">
+				Error bidding - bid price must be higher than start price!
 			</div>
 		';
 	} else {
-		echo '
-			<div class = "alert alert-danger">
-				Error bidding
-			</div>
-		';
+
+		//get starting price, if bidprice<starting price then show error.
+
+		$bidQuery = "INSERT INTO `bids` (`auctionID`, `userId`, `bidPrice`, `bidDate`) VALUES ('$auctionID', '$userId', '$bidPrice', '$bidDate')";
+		//update auction bid count
+		$updateQuery = "UPDATE `auction` SET bids = bids+1 WHERE auctionID='$auctionID'";
+
+		if(mysqli_query($conn, $bidQuery) && mysqli_query($conn, $updateQuery)){
+			echo '
+				<div class = "alert alert-success">
+					Bid successful
+				</div>
+			';
+		} else {
+			echo '
+				<div class = "alert alert-danger">
+					Error bidding
+				</div>
+			';
+		}
 	}
 
 

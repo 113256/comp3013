@@ -14,7 +14,7 @@ if(empty($_SESSION['user']))
 }
 $userID = $_SESSION['user']['userId'];
 //dont show my own auctions
-$auctionItemQuery = "SELECT datePosted, startPrice, endDate, bids, i.itemName, i.description FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID WHERE a.userID = '$userID'";
+$auctionItemQuery = "SELECT auctionID, datePosted, startPrice, endDate, bids, i.itemName, i.description FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID WHERE a.userID = '$userID'";
 $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error($conn));
 
 ?>
@@ -46,6 +46,12 @@ $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error(
 			<?php
 			mysqli_data_seek($auctionItemResult,0);//return to 0th index
 			while($row = mysqli_fetch_array($auctionItemResult)){
+
+				$auctionID = $row['auctionID'];
+				$highestBidQuery = "SELECT `bidPrice` FROM `bids` WHERE auctionID = '$auctionID' ORDER BY bidPrice DESC LIMIT 1";
+				$highestBidResult = mysqli_query($conn, $highestBidQuery);
+				$highestBid = mysqli_fetch_array($highestBidResult);
+
 				echo '<tr>';
 				echo '<td>'.$row['itemName'].'</td>';
 				echo '<td>'.$row['datePosted'].'</td>';
@@ -53,7 +59,7 @@ $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error(
 				echo '<td>'.$row['startPrice'].'</td>';
 				echo '<td>'.$row['description'].'</td>';
 				echo '<td>'.$row['bids'].'</td>';
-				echo '<td>highest bid here</td>';
+				echo '<td>'.$highestBid[0].'</td>';
 				echo '<td><a class = "btn btn-success" href = "#">View report</a></td>';
 				echo '</tr>';
 			}
