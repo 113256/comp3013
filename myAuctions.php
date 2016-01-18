@@ -14,7 +14,7 @@ if(empty($_SESSION['user']))
 }
 $userID = $_SESSION['user']['userId'];
 //dont show my own auctions
-$auctionItemQuery = "SELECT auctionID, datePosted, startPrice, endDate, bids, i.itemName, i.description FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID WHERE a.userID != '$userID'";
+$auctionItemQuery = "SELECT datePosted, startPrice, endDate, bids, i.itemName, i.description FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID WHERE a.userID = '$userID'";
 $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error($conn));
 
 ?>
@@ -23,7 +23,7 @@ $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error(
 <div class = "container-medium">
 	<section>
 		<div class = "jumbotron">
-		<h1>Browse auctions</h1>
+		<h1>My auctions</h1>
 		<p><?php echo $_SESSION['user']['userName']?></p>
 		<a href = "dashboard.php" class = "btn btn-success">Back</a>
 		</div>
@@ -40,7 +40,7 @@ $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error(
 			<th>Description</th>
 			<th>Bids</th>
 			<th>Highest bid</th>
-			<th>Place a bid</th>
+			<th>View bid report</th>
 		</thead>
 		<tbody>
 			<?php
@@ -54,7 +54,7 @@ $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error(
 				echo '<td>'.$row['description'].'</td>';
 				echo '<td>'.$row['bids'].'</td>';
 				echo '<td>highest bid here</td>';
-				echo '<td><a class = "btn btn-success" href = "placeBid.php?auctionID='.$row['auctionID'].'">Bid</a></td>';
+				echo '<td><a class = "btn btn-success" href = "#">View report</a></td>';
 				echo '</tr>';
 			}
 			?>

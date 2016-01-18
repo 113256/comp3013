@@ -80,6 +80,31 @@ print_r($_SESSION['user']);
 						
 					</div>
 				</div>
+				<div class = "row">
+					<div class = "col-xs-6">
+						<a href="myAuctions.php">
+						<div class = "fontAwesome">
+						<span class="fa-stack fa-3x">
+	                       <i class="fa fa-circle fa-stack-2x text-primary"></i>
+	                       <i class="fa fa-book fa-stack-1x fa-inverse"></i>
+	                    </span>
+	                    <h4>My auctions</h4>
+	                	</div>
+	                	</a>
+					</div>
+					<div class = "col-xs-6">
+						<a href="myBids.php">
+							<div class = "fontAwesome">
+								<span class="fa-stack fa-3x">
+			                       <i class="fa fa-circle fa-stack-2x text-primary"></i>
+			                       <i class="fa fa-check fa-stack-1x fa-inverse"></i>
+			                    </span>
+			                    <h4>My bids</h4>
+			                </div>
+						</a>
+						
+					</div>
+				</div>
 			</div>
 		</div>
 		
