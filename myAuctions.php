@@ -60,7 +60,7 @@ $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error(
 				echo '<td>'.$row['description'].'</td>';
 				echo '<td>'.$row['bids'].'</td>';
 				echo '<td>'.$highestBid[0].'</td>';
-				echo '<td><a class = "btn btn-success" href = "#">View report</a></td>';
+				echo '<td><a class = "btn btn-success" href = "bidReport.php?auctionID='.$auctionID.'">View report</a></td>';
 				echo '</tr>';
 			}
 			?>
