@@ -6,7 +6,7 @@ include('includes/head.php');
 include('includes/connect.php');
 error_reporting(E_ALL);
 
-session_start();
+//session_start();
 if(empty($_SESSION['user'])) 
 { 
     // If they are not, we redirect them to the login page. 
@@ -67,11 +67,14 @@ if(isset($_POST['placeBid'])){
 
 		//get starting price, if bidprice<starting price then show error.
 
-		$bidQuery = "INSERT INTO `bids` (`auctionID`, `userId`, `bidPrice`, `bidDate`) VALUES ('$auctionID', '$userId', '$bidPrice', '$bidDate')";
+		//$bidQuery = "INSERT INTO `bids` (`auctionID`, `userId`, `bidPrice`, `bidDate`) VALUES ('$auctionID', '$userId', '$bidPrice', '$bidDate')";
 		//update auction bid count
-		$updateQuery = "UPDATE `auction` SET bids = bids+1 WHERE auctionID='$auctionID'";
+		//$updateQuery = "UPDATE `auction` SET bids = bids+1 WHERE auctionID='$auctionID'";
 
-		if(mysqli_query($conn, $bidQuery) && mysqli_query($conn, $updateQuery)){
+		//auction manager
+		$auction = new Auction($conn);
+
+		if($auction->addBid($auctionID, $userId, $bidPrice, $bidDate)){
 			echo '
 				<div class = "alert alert-success">
 					Bid successful

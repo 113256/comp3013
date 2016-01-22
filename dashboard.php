@@ -4,7 +4,7 @@ include('includes/head.php');
 include('includes/connect.php');
 error_reporting(E_ALL);
 
-session_start();
+//session_start();
 
 if(empty($_SESSION['user'])) 
 { 

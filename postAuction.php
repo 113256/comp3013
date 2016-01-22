@@ -6,7 +6,7 @@ include('includes/head.php');
 include('includes/connect.php');
 error_reporting(E_ALL);
 
-session_start();
+//session_start();
 if(empty($_SESSION['user'])) 
 { 
     // If they are not, we redirect them to the login page. 
@@ -56,24 +56,16 @@ if(isset($_POST['postAuction'])){
 	$resPrice = $_POST['resPrice'];
 	//$count = 0;//number of views
 
-	$insertAuctionQuery = "INSERT INTO `auction` (`datePosted`, `endDate`, `startPrice`, `resPrice`, `count`, `itemID`, `userId`, `bids`) VALUES ('$datePosted', '$endDate', '$startPrice', '$resPrice', 0, '$currentItemID', '$userId', 0)";
-	
-
-
 	//insert item into item table
 	//insert item id here too 
 	$itemName = $_POST['itemName']; 
 	$description = $_POST['description'];
 	$category = $_POST['category'];
 
-	$insertItemQuery = "INSERT INTO `items` (`itemID`, `itemName`, `description`, `category`) VALUES ('$currentItemID', '$itemName', '$description', '$category')";
-	
-	/*echo "item";
-	mysqli_query($conn, $insertItemQuery) or die(mysqli_error($conn));
-	echo "auction";
-	mysqli_query($conn, $insertAuctionQuery) or die(mysqli_error($conn));*/
+	$auction = new Auction($conn);
+	$item = new Item($conn);
 
-	if(mysqli_query($conn, $insertItemQuery) && mysqli_query($conn, $insertAuctionQuery)){
+	if($auction->addAuction($datePosted, $endDate, $startPrice, $resPrice, $currentItemID, $userId) && $item->addItem($currentItemID, $itemName, $description, $category)){
 		echo '
 			<div class = "alert alert-success">
 				Auction successfully posted

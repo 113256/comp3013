@@ -3,7 +3,7 @@
 include('includes/head.php');
 include('includes/connect.php');
 error_reporting(E_ALL);
-session_start();
+//session_start();
 if(empty($_SESSION['user'])) 
 { 
     // If they are not, we redirect them to the login page. 
@@ -51,7 +51,7 @@ $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error(
 				$highestBidQuery = "SELECT `bidPrice` FROM `bids` WHERE auctionID = '$auctionID' ORDER BY bidPrice DESC LIMIT 1";
 				$highestBidResult = mysqli_query($conn, $highestBidQuery);
 				$highestBid = mysqli_fetch_array($highestBidResult);
-				
+
 				echo '<tr>';
 				echo '<td>'.$row['itemName'].'</td>';
 				echo '<td>'.$row['datePosted'].'</td>';

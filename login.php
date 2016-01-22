@@ -2,6 +2,8 @@
 <?php 
 include('includes/head.php');
 include('includes/connect.php');
+require('lib/password.php');
+
 error_reporting(E_ALL);
 
 if(isset($_POST['login'])){
@@ -9,18 +11,26 @@ if(isset($_POST['login'])){
 
 	$userName = $_POST['userName'];
 	$password = $_POST['password'];
-
+	
 	$selectQuery = "SELECT * FROM `users` WHERE `userName`='$userName'";
 	$userResult = mysqli_query($conn, $selectQuery);
 	$row = mysqli_fetch_array($userResult);
-	//print_r($row);
-	session_start();
-	//this works because $row has $row['userName'] = $userName, $row['fName'] etc... since $row is an array.
-	//so this sets $_SESSION['user']['userName'] = $userName and so on 
-	$_SESSION['user'] = $row; 
+	//echo $row['password'];
+	//echo password_verify("jo65tt", '$2y$10$WVSty3ywE3muf');
+	if($user->login($userName, $password)){
 
-	header("Location: dashboard.php"); 
-    die("Redirecting to: dashboard.php"); 
+		//session_start();
+		//this works because $row has $row['userName'] = $userName, $row['fName'] etc... since $row is an array.
+		//so this sets $_SESSION['user']['userName'] = $userName and so on 
+		$_SESSION['user'] = $row; 
+
+		header("Location: dashboard.php"); 
+	    die("Redirecting to: dashboard.php"); 
+	} else {
+		header("Location: login.php"); 
+	    die("Redirecting to: login.php"); 
+	}
+	
 }
 
 ?>

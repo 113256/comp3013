@@ -2,6 +2,9 @@
 <?php 
 include('includes/head.php');
 include('includes/connect.php');
+require('lib/password.php');
+//require('classes/user.php');
+
 error_reporting(E_ALL);
 
 if(isset($_POST['register'])){
@@ -11,8 +14,8 @@ if(isset($_POST['register'])){
 	$password = $_POST['password'];
 	$email = $_POST['email'];
 
-	$insertQuery = "INSERT INTO `users` (`userName`, `fName`, `lName`, `password`, `email`) VALUES ('$userName','$fName', '$lName', '$password', '$email')";
-	mysqli_query($conn, $insertQuery) or die(mysqli_error($conn));
+	//$user = new User($conn);
+	$user->register($userName, $fName, $lName, $password, $email);
 
 }
 
