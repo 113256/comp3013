@@ -11,14 +11,13 @@ if(isset($_POST['login'])){
 
 	$userName = $_POST['userName'];
 	$password = $_POST['password'];
-	
+
 	$selectQuery = "SELECT * FROM `users` WHERE `userName`='$userName'";
 	$userResult = mysqli_query($conn, $selectQuery);
 	$row = mysqli_fetch_array($userResult);
 	//echo $row['password'];
 	//echo password_verify("jo65tt", '$2y$10$WVSty3ywE3muf');
 	if($user->login($userName, $password)){
-
 		//session_start();
 		//this works because $row has $row['userName'] = $userName, $row['fName'] etc... since $row is an array.
 		//so this sets $_SESSION['user']['userName'] = $userName and so on 

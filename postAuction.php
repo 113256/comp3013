@@ -65,7 +65,7 @@ if(isset($_POST['postAuction'])){
 	$auction = new Auction($conn);
 	$item = new Item($conn);
 
-	if($auction->addAuction($datePosted, $endDate, $startPrice, $resPrice, $currentItemID, $userId) && $item->addItem($currentItemID, $itemName, $description, $category)){
+	if($auction->addAuction($datePosted, $endDate, $startPrice, $resPrice, $currentItemID, $userId) && $item->addItem($currentItemID, $itemName, $description, $category, $userId)){
 		echo '
 			<div class = "alert alert-success">
 				Auction successfully posted

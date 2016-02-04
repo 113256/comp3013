@@ -14,7 +14,19 @@ if(empty($_SESSION['user']))
 }
 $userID = $_SESSION['user']['userId'];
 //dont show my own auctions
-$auctionItemQuery = "SELECT auctionID, datePosted, startPrice, endDate, bids, i.itemName, i.description FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID WHERE a.userID != '$userID'";
+if(isset($_GET['category'])){
+	$filter = $_GET['category'];//category in an array
+	$auctionItemQuery = "SELECT auctionID, datePosted, startPrice, endDate, bids, i.itemName, i.description, i.category FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID WHERE a.userID != '$userID' AND i.category IN (";
+	//where in is shorthand for where or.
+	foreach ($filter as $category) {
+		$auctionItemQuery.="'$category'".",";
+	}
+	$auctionItemQuery = rtrim($auctionItemQuery,",");
+	$auctionItemQuery.=")";
+	echo $auctionItemQuery;
+} else {
+	$auctionItemQuery = "SELECT auctionID, datePosted, startPrice, endDate, bids, i.itemName, i.description, i.category FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID WHERE a.userID != '$userID'";
+}
 $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error($conn));
 
 ?>
@@ -23,9 +35,49 @@ $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error(
 <div class = "container-medium">
 	<section>
 		<div class = "jumbotron">
-		<h1>Browse auctions</h1>
-		<p><?php echo $_SESSION['user']['userName']?></p>
-		<a href = "dashboard.php" class = "btn btn-success">Back</a>
+			<h1>Browse auctions</h1>
+			<p><?php echo $_SESSION['user']['userName']?></p>
+
+			<?php 
+				/*if(isset($_GET['filter'])){
+					$filter = $_GET['filter'];
+					if(empty($filter)){
+						echo "<h2>Showing all results for the all categories</h2><br>";
+					} else {
+						echo "<h2>Showing all results for the ".$filter." category</h2><br>";
+					}
+				}*/
+				if(isset($_GET['category'])){
+					$filter = $_GET['category'];//category is an array
+					if(empty($filter)){
+						echo "<h3>Showing results for the all categories</h3><br>";
+					} else {
+						echo "<h3>Showing results for the ";
+						foreach ($filter as $cat) {
+							echo "$cat, ";
+						}
+						echo " </h3><br>";
+					}
+					//print_r($filter);
+					//echo '$filter';
+				}
+			?>
+
+			<a href = "dashboard.php" class = "btn btn-success">Back</a>
+			<form action = "browse.php" method = "get">
+				<div class = "form-group">
+					<!--<select name = "filter" class = "form-control">
+					  <option value="" selected = "selected">All categories</option>	
+					  <option value="book">Book</option>
+					  <option value="game">Game</option>
+					</select>-->
+					<label class="checkbox-inline"><input name = "category[]" type="checkbox" value="book">Book</label>
+					<label class="checkbox-inline"><input name = "category[]" type="checkbox" value="game">Game</label>
+					<label class="checkbox-inline"><input name = "category[]" type="checkbox" value="Option">Option</label>
+				</div>
+				<button type = "submit" class = "btn btn-default">Submit</button>	
+			</form>
+
 		</div>
 	</section>
 
@@ -38,6 +90,7 @@ $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error(
 			<th>End date</th>
 			<th>Starting price</th>
 			<th>Description</th>
+			<th>Category</th>
 			<th>Bids</th>
 			<th>Highest bid</th>
 			<th>Place a bid</th>
@@ -58,6 +111,7 @@ $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error(
 				echo '<td>'.$row['endDate'].'</td>';
 				echo '<td>'.$row['startPrice'].'</td>';
 				echo '<td>'.$row['description'].'</td>';
+				echo '<td>'.$row['category'].'</td>';
 				echo '<td>'.$row['bids'].'</td>';
 				echo '<td>'.$highestBid[0].'</td>';
 				echo '<td><a class = "btn btn-success" href = "placeBid.php?auctionID='.$row['auctionID'].'">Bid</a></td>';

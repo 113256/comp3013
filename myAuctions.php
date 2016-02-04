@@ -13,8 +13,9 @@ if(empty($_SESSION['user']))
     die("Redirecting to login.php"); 
 }
 $userID = $_SESSION['user']['userId'];
-//dont show my own auctions
+
 $auctionItemQuery = "SELECT auctionID, datePosted, startPrice, endDate, bids, i.itemName, i.description FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID WHERE a.userID = '$userID'";
+
 $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error($conn));
 
 ?>

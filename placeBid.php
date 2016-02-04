@@ -57,10 +57,10 @@ if(isset($_POST['placeBid'])){
 	$bidDate = $date = date('Y-m-d');	
 	$bidPrice = $_POST['bidPrice'];
 
-	if($bidPrice <= $auctionItemRow['startPrice']){
+	if($bidPrice < $auctionItemRow['startPrice'] || $bidPrice <= $highestBid[0]){
 		echo '
 			<div class = "alert alert-danger">
-				Error bidding - bid price must be higher than start price!
+				Error bidding - bid price must be higher than start price or highest bid!
 			</div>
 		';
 	} else {
@@ -80,6 +80,10 @@ if(isset($_POST['placeBid'])){
 					Bid successful
 				</div>
 			';
+
+			//notifyBidders($auctionID, $bidPrice, $bidDate, $userId)
+			$auction->notifyBidders($auctionID, $bidPrice, $bidDate, $userId);
+
 		} else {
 			echo '
 				<div class = "alert alert-danger">
@@ -104,7 +108,7 @@ if(isset($_POST['placeBid'])){
 
 
 
-		<button class = "btn btn-success" type = "submit" name = "placeBid">Post auction</button>
+		<button class = "btn btn-success" type = "submit" name = "placeBid">Place bid</button>
 	</form>
 
 </div>

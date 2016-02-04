@@ -6,9 +6,9 @@ class Item{
 	function __construct($conn){
 		$this->conn = $conn;
 	}
-
-	public function addItem($itemID, $itemName, $description, $category){
-		$insertItemQuery = "INSERT INTO `items` (`itemID`, `itemName`, `description`, `category`) VALUES ('$itemID', '$itemName', '$description', '$category')";
+	
+	public function addItem($itemID, $itemName, $description, $category, $userId){
+		$insertItemQuery = "INSERT INTO `items` (`itemID`, `itemName`, `description`, `category`, `userId`) VALUES ('$itemID', '$itemName', '$description', '$category', '$userId')";
 		//echo $insertItemQuery;
 		if(mysqli_query($this->conn, $insertItemQuery)){
 			return true;
