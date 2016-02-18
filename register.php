@@ -7,6 +7,16 @@ require('lib/password.php');
 
 error_reporting(E_ALL);
 
+if(!empty($_SESSION['user'])) 
+{ 
+    // If they are not, we redirect them to the login page. 
+    header("Location: dashboard.php"); 
+     
+    // Remember that this die statement is absolutely critical.  Without it, 
+    // people can view your members-only content without logging in. 
+    die("Redirecting to dashboard.php"); 
+}
+
 if(isset($_POST['register'])){
 	$userName = $_POST['userName'];
 	$fName = $_POST['fName'];
@@ -17,6 +27,8 @@ if(isset($_POST['register'])){
 	//$user = new User($conn);
 	$user->register($userName, $fName, $lName, $password, $email);
 
+	header("Location: login.php"); 
+	die("Redirecting to: login.php"); 
 }
 
 ?>

@@ -107,7 +107,67 @@ print_r($_SESSION['user']);
 				</div>
 			</div>
 		</div>
+		<?php
+		$auction = new Auction($conn);
+		//index = auctionID, 
+		$auctionList = $auction->recommend($_SESSION['user']['userId']);
+		//print_r($auctionList);
+		//create new array that contains all the indexes of auctionList that has value of 2
+		$auctionIdArray = [];
 		
+		//key->value because we need the index
+		foreach ($auctionList as $key=>$val) {
+			if($val==2){
+				$auctionIdArray[]=$key;
+			}
+		}
+
+
+		?>
+
+		<h2>Recommended items</h2><br>
+		<table class = "table table-hover table-condensed">
+		<thead>
+			<th>Item name</th>
+			<th>Date posted</th>
+			<th>End date</th>
+			<th>Starting price</th>
+			<th>Description</th>
+			<th>Category</th>
+			<th>Bids</th>
+			<th>Highest bid</th>
+			<th>Place a bid</th>
+		</thead>
+		<tbody>
+			<?php
+			foreach($auctionIdArray as $aID){
+				$auctionItemQuery = "SELECT auctionID, datePosted, startPrice, endDate, bids, i.itemName, i.description, i.category FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID WHERE a.auctionID = '$aID'";
+				$auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error($conn));
+
+			
+				$row = mysqli_fetch_array($auctionItemResult);
+
+				$auctionID = $row['auctionID'];
+				$highestBidQuery = "SELECT `bidPrice` FROM `bids` WHERE auctionID = '$auctionID' ORDER BY bidPrice DESC LIMIT 1";
+				$highestBidResult = mysqli_query($conn, $highestBidQuery);
+				$highestBid = mysqli_fetch_array($highestBidResult);
+
+				echo '<tr>';
+				echo '<td>'.$row['itemName'].'</td>';
+				echo '<td>'.$row['datePosted'].'</td>';
+				echo '<td>'.$row['endDate'].'</td>';
+				echo '<td>'.$row['startPrice'].'</td>';
+				echo '<td>'.$row['description'].'</td>';
+				echo '<td>'.$row['category'].'</td>';
+				echo '<td>'.$row['bids'].'</td>';
+				echo '<td>'.$highestBid[0].'</td>';
+				echo '<td><a class = "btn btn-success" href = "placeBid.php?auctionID='.$row['auctionID'].'">Bid</a></td>';
+				echo '</tr>';
+			}
+			?>
+			
+		</tbody>
+	</table>
 		
 	</section>
 

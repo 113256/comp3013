@@ -18,7 +18,7 @@ $bidQuery = "SELECT * FROM `bids` WHERE auctionID = '$auctionID'";
 $bidResult = mysqli_query($conn, $bidQuery);
 
 
-$auctionItemQuery = "SELECT datePosted, startPrice, endDate, bids, i.itemName, i.description FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID WHERE a.auctionID = '$auctionID'";
+$auctionItemQuery = "SELECT datePosted, datePosted, startPrice, endDate, bids, resPrice, i.itemName, i.description FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID WHERE a.auctionID = '$auctionID'";
 $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error($conn));
 $auctionItemRow = mysqli_fetch_array($auctionItemResult);
 
@@ -36,14 +36,19 @@ $auctionItemRow = mysqli_fetch_array($auctionItemResult);
 		<ul class="list-group">
 		  <li class="list-group-item">Item name: <?php echo $auctionItemRow['itemName'];?> </li>
 		  <li class="list-group-item">Start price: <?php echo $auctionItemRow['startPrice'];?></li>
+		  <li class="list-group-item">Reserve price: <?php echo $auctionItemRow['resPrice'];?></li>
 		  <li class="list-group-item">Description: <?php echo $auctionItemRow['description'];?></li>
+		  <li class="list-group-item">Start date: <?php echo $auctionItemRow['datePosted'];?></li>
 		  <li class="list-group-item">End date: <?php echo $auctionItemRow['endDate'];?></li>
+		  <li class="list-group-item">Bids: <?php echo $auctionItemRow['bids'];?></li>
 		</ul>
 
 		</div>
 	</section>
 
-
+	<div class="alert alert-danger">
+	  <strong>Note!</strong> Only the highest bid is shown for each user.
+	</div>
 
 	<table class = "table table-hover table-condensed">
 		<thead>

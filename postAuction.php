@@ -31,7 +31,9 @@ if(empty($_SESSION['user']))
 <?php 
 $currentItemID = 0;
 //find highest item id from table
-	$itemIDQuery = "SELECT * FROM `items` WHERE itemID=(SELECT max(itemID) FROM items )";
+	//$itemIDQuery = "SELECT * FROM `items` WHERE itemID=(SELECT max(itemID) FROM items )";
+	//$itemIDQuery = "SELECT * FROM `items` ORDER BY itemID DESC LIMIT 1";
+	$itemIDQuery = "SELECT max(itemID) FROM items ";
 	$itemIDResult = mysqli_query($conn, $itemIDQuery);
 
 	if(mysqli_num_rows($itemIDResult)==0){ 
