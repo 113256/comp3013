@@ -24,8 +24,3 @@ include_once('classes/item.php');
     $user = new USER($conn);
 
 
-?>
-
-    
-
-

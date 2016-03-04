@@ -1,7 +1,5 @@
-<?php include('includes/connect.php');?>
-<!DOCTYPE html>
-<?php
-include('includes/head.php');
+<?php include('includes/connect.php');
+
 require('lib/password.php');
 //require('classes/user.php');
 
@@ -30,7 +28,7 @@ if(isset($_POST['register'])){
 	header("Location: login.php"); 
 	die("Redirecting to: login.php"); 
 }
-
+include('includes/head.php');
 ?>
 
 

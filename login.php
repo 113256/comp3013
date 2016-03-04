@@ -1,7 +1,5 @@
-<?php include('includes/connect.php');require('lib/password.php');?>
-<!DOCTYPE html>
-<?php
-include('includes/head.php');
+<?php include('includes/connect.php');require('lib/password.php');
+
 
 
 error_reporting(E_ALL);
@@ -31,7 +29,7 @@ if(isset($_POST['login'])){
 	}
 	
 }
-
+include('includes/head.php');
 ?>
 
 <h1 style = "text-align: center">Login</h1>

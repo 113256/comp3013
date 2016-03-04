@@ -1,7 +1,4 @@
-<?php include('includes/connect.php');?>
-<!DOCTYPE html>
-<?php
-include('includes/head.php');
+<?php include('includes/connect.php');
 
 //session_start();
 if(empty($_SESSION['user'])) 
@@ -12,6 +9,7 @@ if(empty($_SESSION['user']))
     // people can view your members-only content without logging in. 
     die("Redirecting to login.php"); 
 }
+include('includes/head.php');
 $userID = $_SESSION['user']['userId'];
 echo $_SESSION['user']['userName'];
 

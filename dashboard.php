@@ -1,7 +1,4 @@
-<?php include('includes/connect.php');?>
-<!DOCTYPE html>
-<?php
-include('includes/head.php');
+<?php include('includes/connect.php');
 error_reporting(E_ALL);
 
 //session_start();
@@ -21,6 +18,7 @@ if(isset($_POST['logout'])){
 	header("Location: login.php"); 
     die("Redirecting to login.php"); 
 }
+include('includes/head.php');
 print_r($_SESSION['user']);
 ?>
 

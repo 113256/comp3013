@@ -1,7 +1,4 @@
-<?php include('includes/connect.php');?>
-<!DOCTYPE html>
-<?php
-include('includes/head.php');
+<?php include('includes/connect.php');
 error_reporting(E_ALL);
 //session_start();
 if(empty($_SESSION['user'])) 
@@ -12,6 +9,7 @@ if(empty($_SESSION['user']))
     // people can view your members-only content without logging in. 
     die("Redirecting to login.php"); 
 }
+include('includes/head.php');
 $userID = $_SESSION['user']['userId'];
 //dont show my own auctions
 if(isset($_GET['category'])){
@@ -28,7 +26,6 @@ if(isset($_GET['category'])){
 	$auctionItemQuery = "SELECT auctionID, datePosted, startPrice, endDate, bids, i.itemName, i.description, i.category FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID WHERE a.userID != '$userID'";
 }
 $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error($conn));
-
 ?>
 
 

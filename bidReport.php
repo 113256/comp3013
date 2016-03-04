@@ -1,7 +1,4 @@
-<?php include('includes/connect.php');?>
-<!DOCTYPE html>
-<?php
-include('includes/head.php');
+<?php include('includes/connect.php');
 error_reporting(E_ALL);
 //session_start();
 if(empty($_SESSION['user'])) 
@@ -21,7 +18,7 @@ $bidResult = mysqli_query($conn, $bidQuery);
 $auctionItemQuery = "SELECT datePosted, datePosted, startPrice, endDate, bids, resPrice, noViews,i.itemName, i.description FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID WHERE a.auctionID = '$auctionID'";
 $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error($conn));
 $auctionItemRow = mysqli_fetch_array($auctionItemResult);
-
+include('includes/head.php');
 ?>
 
 

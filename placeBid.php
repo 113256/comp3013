@@ -1,7 +1,4 @@
-<?php include('includes/connect.php');?>
-<!DOCTYPE html>
-<?php
-include('includes/head.php');
+<?php include('includes/connect.php');
 error_reporting(E_ALL);
 
 //session_start();
@@ -30,8 +27,8 @@ if(isset($_GET['auctionID'])){
 	$highestBidResult = mysqli_query($conn, $highestBidQuery);
 	$highestBid = mysqli_fetch_array($highestBidResult);
 
-} 
-
+}
+include('includes/head.php');
 ?>
 
 <div class = "container-medium">

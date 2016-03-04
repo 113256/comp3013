@@ -1,7 +1,4 @@
-<?php include('includes/connect.php');?>
-<!DOCTYPE html>
-<?php
-include('includes/head.php');
+<?php include('includes/connect.php');
 
 
 if(!empty($_SESSION['user'])) 
@@ -13,7 +10,7 @@ if(!empty($_SESSION['user']))
     // people can view your members-only content without logging in. 
     die("Redirecting to dashboard.php"); 
 }
-
+include('includes/head.php');
 ?>
 
 

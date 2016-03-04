@@ -1,7 +1,4 @@
-<?php include('includes/connect.php');?>
-<!DOCTYPE html>
-<?php
-include('includes/head.php');
+<?php include('includes/connect.php');
 error_reporting(E_ALL);
 
 //session_start();
@@ -13,7 +10,7 @@ if(empty($_SESSION['user']))
     // people can view your members-only content without logging in. 
     die("Redirecting to login.php"); 
 }
-
+include('includes/head.php');
 ?>
 
 <div class = "container-medium">
