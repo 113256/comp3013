@@ -1,7 +1,7 @@
+<?php include('includes/connect.php');?>
 <!DOCTYPE html>
 <?php
 include('includes/head.php');
-include('includes/connect.php');
 error_reporting(E_ALL);
 //session_start();
 if(empty($_SESSION['user'])) 
@@ -12,6 +12,9 @@ if(empty($_SESSION['user']))
     // people can view your members-only content without logging in. 
     die("Redirecting to login.php"); 
 }
+
+
+
 $userID = $_SESSION['user']['userId'];
 
 $myBidQuery = "SELECT * FROM `bids` WHERE userId = '$userID'";

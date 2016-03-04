@@ -1,8 +1,8 @@
+<?php include('includes/connect.php');?>
 <!DOCTYPE html>
-<?php 
-
+<?php
 include('includes/head.php');
-include('includes/connect.php');
+
 
 if(!empty($_SESSION['user'])) 
 { 

@@ -1,9 +1,7 @@
+<?php include('includes/connect.php');?>
 <!DOCTYPE html>
-
-<?php 
-
+<?php
 include('includes/head.php');
-include('includes/connect.php');
 error_reporting(E_ALL);
 
 //session_start();
@@ -15,8 +13,14 @@ if(empty($_SESSION['user']))
     // people can view your members-only content without logging in. 
     die("Redirecting to login.php"); 
 }
+
 if(isset($_GET['auctionID'])){
 	$auctionID = $_GET['auctionID'];
+
+	//increase no views (viewing traffic)
+	$trafficQuery = "UPDATE `auction` SET noViews = noViews+1 WHERE `auctionID` = '$auctionID'";
+	mysqli_query($conn,$trafficQuery) or die(mysqli_error($conn));
+
 
 	$auctionItemQuery = "SELECT datePosted, startPrice, endDate, bids, i.itemName, i.description FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID WHERE a.auctionID = '$auctionID'";
 	$auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error($conn));

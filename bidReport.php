@@ -1,7 +1,7 @@
+<?php include('includes/connect.php');?>
 <!DOCTYPE html>
 <?php
 include('includes/head.php');
-include('includes/connect.php');
 error_reporting(E_ALL);
 //session_start();
 if(empty($_SESSION['user'])) 
@@ -18,7 +18,7 @@ $bidQuery = "SELECT * FROM `bids` WHERE auctionID = '$auctionID'";
 $bidResult = mysqli_query($conn, $bidQuery);
 
 
-$auctionItemQuery = "SELECT datePosted, datePosted, startPrice, endDate, bids, resPrice, i.itemName, i.description FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID WHERE a.auctionID = '$auctionID'";
+$auctionItemQuery = "SELECT datePosted, datePosted, startPrice, endDate, bids, resPrice, noViews,i.itemName, i.description FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID WHERE a.auctionID = '$auctionID'";
 $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error($conn));
 $auctionItemRow = mysqli_fetch_array($auctionItemResult);
 
@@ -41,6 +41,7 @@ $auctionItemRow = mysqli_fetch_array($auctionItemResult);
 		  <li class="list-group-item">Start date: <?php echo $auctionItemRow['datePosted'];?></li>
 		  <li class="list-group-item">End date: <?php echo $auctionItemRow['endDate'];?></li>
 		  <li class="list-group-item">Bids: <?php echo $auctionItemRow['bids'];?></li>
+		  <li class="list-group-item">Number of views: <?php echo $auctionItemRow['noViews'];?></li>
 		</ul>
 
 		</div>

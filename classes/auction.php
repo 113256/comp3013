@@ -38,11 +38,19 @@ class Auction{
 		//$query = "SELECT email FROM users u, bids b WHERE u.userId = b.userId";
 		//select email from users from bids with the same auction id as the auction thats being bid on
 		//$query = "SELECT email FROM `users` as u INNER JOIN `auction` as a on u.userId = a.userId INNER JOIN `bids` as b on a.auctionID = b.auctionID";
-		$query = "SELECT email FROM `users` as u INNER JOIN (SELECT b.userId,b.auctionID FROM `bids` as b INNER JOIN `auction` as a on b.auctionID=a.auctionID WHERE b.auctionID = '$auctionID') as c on u.userId = c.userId WHERE c.userId != '$userId'";
+		$query = "SELECT email, c.description,c.itemName FROM `users` as u INNER JOIN (SELECT b.userId,b.auctionID,i.description,i.itemName FROM `bids` as b INNER JOIN `auction` as a on b.auctionID=a.auctionID INNER JOIN `items` as i on a.itemID = i.itemID WHERE b.auctionID = '$auctionID') as c on u.userId = c.userId WHERE c.userId != '$userId'";
 		$result = mysqli_query($this->conn, $query) or die(mysqli_error($this->conn));
 		while($row = mysqli_fetch_array($result)){
-			echo $row['email']."<br>";
+			//echo $row['email']."<br>";
 			//send email
+			$to = "113256@gmail.com";
+			$itemDesc = $row['description'];
+			$itemName = $row['itemName'];
+			$subject = "outbid notification";
+			$message = "You have been outbid on ".$itemName." with the description: ".$itemDesc;
+
+			//need a mail server
+			//mail($to, $subject, $message);
 		}
 	}
 
