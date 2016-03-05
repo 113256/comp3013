@@ -1,8 +1,9 @@
-<?php include('includes/connect.php');?>
+<?php include('includes/connect.php');
+require('lib/password.php');?>
 <!DOCTYPE html>
 <?php
 include('includes/head.php');
-require('lib/password.php');
+
 //require('classes/user.php');
 
 error_reporting(E_ALL);

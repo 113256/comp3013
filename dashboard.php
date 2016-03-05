@@ -9,17 +9,17 @@ error_reporting(E_ALL);
 if(empty($_SESSION['user'])) 
 { 
     // If they are not, we redirect them to the login page. 
-    header("Location: login.php"); 
+    header("Location: index.php"); 
      
     // Remember that this die statement is absolutely critical.  Without it, 
     // people can view your members-only content without logging in. 
-    die("Redirecting to login.php"); 
+    die("Redirecting to index.php"); 
 }
 
 if(isset($_POST['logout'])){
 	unset($_SESSION['user']);
-	header("Location: login.php"); 
-    die("Redirecting to login.php"); 
+	header("Location: index.php"); 
+    die("Redirecting to index.php"); 
 }
 print_r($_SESSION['user']);
 ?>
@@ -141,7 +141,7 @@ print_r($_SESSION['user']);
 		<tbody>
 			<?php
 			foreach($auctionIdArray as $aID){
-				$auctionItemQuery = "SELECT auctionID, datePosted, startPrice, endDate, bids, i.itemName, i.description, i.category FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID WHERE a.auctionID = '$aID'";
+				$auctionItemQuery = "SELECT auctionID, datePosted, startPrice, endDate, bids, i.itemName, i.description, i.category,c.categoryName FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID INNER JOIN `category` as c on i.category = c.id WHERE a.auctionID = '$aID'";
 				$auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error($conn));
 
 			
@@ -158,7 +158,7 @@ print_r($_SESSION['user']);
 				echo '<td>'.$row['endDate'].'</td>';
 				echo '<td>'.$row['startPrice'].'</td>';
 				echo '<td>'.$row['description'].'</td>';
-				echo '<td>'.$row['category'].'</td>';
+				echo '<td>'.$row['categoryName'].'</td>';
 				echo '<td>'.$row['bids'].'</td>';
 				echo '<td>'.$highestBid[0].'</td>';
 				echo '<td><a class = "btn btn-success" href = "placeBid.php?auctionID='.$row['auctionID'].'">Bid</a></td>';

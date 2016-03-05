@@ -8,11 +8,14 @@ error_reporting(E_ALL);
 if(empty($_SESSION['user'])) 
 { 
     // If they are not, we redirect them to the login page. 
-    header("Location: login.php"); 
+    header("Location: index.php"); 
     // Remember that this die statement is absolutely critical.  Without it, 
     // people can view your members-only content without logging in. 
-    die("Redirecting to login.php"); 
+    die("Redirecting to index.php"); 
 }
+
+$listCategoryQuery = "SELECT * FROM category";
+$listCateoryResult = mysqli_query($conn, $listCategoryQuery);
 
 ?>
 
@@ -112,7 +115,15 @@ if(isset($_POST['postAuction'])){
 
 		<div class = "form-group">
 			<label>Category</label>
-			<input type = "text" class = "form-control" name = "category" placeholder = "book" required>
+			<select name = "category" class = "form-control">
+				<?php
+				while($row = mysqli_fetch_array($listCateoryResult)){
+					$id = $row['id'];
+					$categoryName = $row['categoryName'];
+					echo "<option value='$id'>$categoryName</option>";
+				}
+				?>
+			</select>
 		</div>
 
 		<div class = "form-group">

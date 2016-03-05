@@ -7,10 +7,10 @@ include('includes/head.php');
 if(empty($_SESSION['user'])) 
 { 
     // If they are not, we redirect them to the login page. 
-    header("Location: login.php"); 
+    header("Location: index.php"); 
     // Remember that this die statement is absolutely critical.  Without it, 
     // people can view your members-only content without logging in. 
-    die("Redirecting to login.php"); 
+    die("Redirecting to index.php"); 
 }
 $userID = $_SESSION['user']['userId'];
 echo $_SESSION['user']['userName'];

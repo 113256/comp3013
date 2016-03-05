@@ -14,7 +14,7 @@ if(empty($_SESSION['user']))
 }
 $userID = $_SESSION['user']['userId'];
 
-$auctionItemQuery = "SELECT auctionID, datePosted, startPrice, endDate, bids, i.itemName, i.description FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID WHERE a.userID = '$userID'";
+$auctionItemQuery = "SELECT auctionID, datePosted, startPrice, endDate, bids, i.itemName, i.description,c.categoryName FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID INNER JOIN `category` as c on i.category = c.id WHERE a.userID = '$userID'";
 
 $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error($conn));
 
@@ -38,6 +38,7 @@ $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error(
 			<th>Date posted</th>
 			<th>End date</th>
 			<th>Starting price</th>
+			<th>Category</th>
 			<th>Description</th>
 			<th>Bids</th>
 			<th>Highest bid</th>
@@ -58,6 +59,7 @@ $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error(
 				echo '<td>'.$row['datePosted'].'</td>';
 				echo '<td>'.$row['endDate'].'</td>';
 				echo '<td>'.$row['startPrice'].'</td>';
+				echo '<td>'.$row['categoryName'].'</td>';
 				echo '<td>'.$row['description'].'</td>';
 				echo '<td>'.$row['bids'].'</td>';
 				echo '<td>'.$highestBid[0].'</td>';
