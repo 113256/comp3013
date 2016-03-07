@@ -1,7 +1,4 @@
-<?php include('includes/connect.php');?>
-<!DOCTYPE html>
-<?php
-include('includes/head.php');
+<?php include('includes/connect.php');
 error_reporting(E_ALL);
 //session_start();
 if(empty($_SESSION['user'])) 
@@ -22,7 +19,10 @@ $myBidResult = mysqli_query($conn, $myBidQuery) or die(mysqli_error($conn));
 
 
 
-
+?>
+<!DOCTYPE html>
+<?php 
+include('includes/head.php');
 ?>
 
 

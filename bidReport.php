@@ -1,7 +1,4 @@
-<?php include('includes/connect.php');?>
-<!DOCTYPE html>
-<?php
-include('includes/head.php');
+<?php include('includes/connect.php');
 error_reporting(E_ALL);
 //session_start();
 if(empty($_SESSION['user'])) 
@@ -22,6 +19,10 @@ $auctionItemQuery = "SELECT datePosted, datePosted, startPrice, endDate, bids, r
 $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error($conn));
 $auctionItemRow = mysqli_fetch_array($auctionItemResult);
 
+?>
+<!DOCTYPE html>
+<?php 
+include('includes/head.php');
 ?>
 
 

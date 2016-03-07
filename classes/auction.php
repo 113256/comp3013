@@ -11,6 +11,11 @@ class Auction{
 
 	//datePosted`, `endDate`, `startPrice`, `resPrice`, `count`, `itemID`, `userId`, `bids
 	public function addAuction($datePosted, $endDate, $startPrice, $resPrice, $itemID, $userId){
+
+		if($resPrice <= $startPrice){
+			return false;
+		}
+
 		$insertAuctionQuery = "INSERT INTO `auction` (`datePosted`, `endDate`, `startPrice`, `resPrice`, `noViews`, `itemID`, `userId`, `bids`) VALUES ('$datePosted', '$endDate', '$startPrice', '$resPrice', 0, '$itemID', '$userId', 0)";
 		if(mysqli_query($this->conn, $insertAuctionQuery)){
 			return true;

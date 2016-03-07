@@ -1,7 +1,4 @@
-<?php include('includes/connect.php');?>
-<!DOCTYPE html>
-<?php
-include('includes/head.php');
+<?php include('includes/connect.php');
 error_reporting(E_ALL);
 
 //session_start();
@@ -32,6 +29,10 @@ if(isset($_GET['auctionID'])){
 
 } 
 
+?>
+<!DOCTYPE html>
+<?php 
+include('includes/head.php');
 ?>
 
 <div class = "container-medium">
@@ -99,9 +100,31 @@ if(isset($_POST['placeBid'])){
 
 
 }
+$noCard = false;
+//check card
+$userId = $_SESSION['user']['userId'];
+//card details
+$cardQuery = "SELECT * FROM `payment` WHERE `userId` = '$userId'";
+$cardResult = mysqli_query($conn,$cardQuery);
+$cardRow = mysqli_fetch_array($cardResult);
+if(empty($cardRow)){
+	$noCard = true;
+}
 
 ?>
 
+	<?php 
+	if($noCard){
+	?>
+	
+	<div class = "alert alert-info">
+		You need submit payment details in you dashboard before you can bid
+	</div>
+
+	<?php 	
+	} else {
+
+	?>
 
 	<form role = "form" method = "post" action = "placeBid.php?auctionID=<?php echo $auctionID;?>">
 
@@ -114,6 +137,9 @@ if(isset($_POST['placeBid'])){
 
 		<button class = "btn btn-success" type = "submit" name = "placeBid">Place bid</button>
 	</form>
+	<?php 
+	}
+	?>
 
 </div>
 

@@ -1,10 +1,5 @@
 <?php include('includes/connect.php');
 require('lib/password.php');
-?>
-<!DOCTYPE html>
-<?php
-include('includes/head.php');
-
 
 if(!empty($_SESSION['user'])) 
 { 
@@ -52,12 +47,17 @@ if(isset($_POST['register'])){
 	$email = $_POST['email'];
 
 	//$user = new User($conn);
-	$user->register($userName, $fName, $lName, $password, $email);
+	//$user->register($userName, $fName, $lName, $password, $email);
 
-	header("Location: index.php"); 
-	die("Redirecting to: index.php"); 
+	//header("Location: index.php"); 
+	//die("Redirecting to: index.php"); 
+	echo "Successfully registered";
 }
 
+?>
+<!DOCTYPE html>
+<?php 
+include('includes/head.php');
 ?>
 
 
@@ -72,7 +72,7 @@ if(isset($_POST['register'])){
 					echo "<p>Registered!</p>";
 				}
 			 ?>
-
+			 <h3>Register</h3>
 			<form role = "form" method = "post" action = "index.php">
 
 				<div class = "form-group">
@@ -100,11 +100,14 @@ if(isset($_POST['register'])){
 					<input type = "email" class = "form-control" name = "email" required>
 				</div>
 
+				
+
 				<button type = "submit" class = "btn btn-default" name = "register">Submit</button>
 
 			</form>
 		</div>
 		<div class = "col-lg-6">
+			 <h3>Login</h3>
 			<form role = "form" method = "post" action = "index.php">
 				<div class = "form-group">
 					<label>Username</label>

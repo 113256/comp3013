@@ -25,7 +25,3 @@ include_once('classes/item.php');
 
 
 ?>
-
-    
-
-

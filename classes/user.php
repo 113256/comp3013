@@ -7,7 +7,7 @@ class User{
 	function __construct($conn){
 		$this->conn = $conn;
 	}
-
+													
 	public function login($userName, $password)
     {
       	$selectQuery = "SELECT * FROM `users` WHERE `userName`='$userName'";
@@ -32,6 +32,16 @@ class User{
 
 		$insertQuery = "INSERT INTO `users` (`userName`, `fName`, `lName`, `password`, `email`) VALUES ('$userName','$fName', '$lName', '$password', '$email')";
 		mysqli_query($this->conn, $insertQuery) or die(mysqli_error($this->conn));
+    }
+
+    public function updatePayment($cardName, $cardNumber, $cardExpiry, $userId){
+    	$updateQuery = "INSERT INTO `payment` (`userId`, `cardName`, `cardNumber`, `cardExpiry`) VALUES ('$userId', '$cardName', '$cardNumber', '$cardExpiry') ON DUPLICATE KEY UPDATE `cardName`='$cardName',`cardNumber`='$cardNumber',`cardExpiry`='$cardExpiry' ";
+    	
+    	if (mysqli_query($this->conn, $updateQuery)){
+    		return true;
+    	} else {
+    		return false;
+    	}
     }
 }
 

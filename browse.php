@@ -1,7 +1,5 @@
 <?php include('includes/connect.php');?>
-<!DOCTYPE html>
 <?php
-include('includes/head.php');
 error_reporting(E_ALL);
 //session_start();
 if(empty($_SESSION['user'])) 
@@ -31,6 +29,10 @@ if(isset($_GET['category'])){
 }
 $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error($conn));
 
+?>
+<!DOCTYPE html>
+<?php 
+include('includes/head.php');
 ?>
 
 

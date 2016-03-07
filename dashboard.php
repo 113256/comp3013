@@ -1,7 +1,5 @@
 <?php include('includes/connect.php');?>
-<!DOCTYPE html>
 <?php
-include('includes/head.php');
 error_reporting(E_ALL);
 
 //session_start();
@@ -21,7 +19,38 @@ if(isset($_POST['logout'])){
 	header("Location: index.php"); 
     die("Redirecting to index.php"); 
 }
+
+if(isset($_POST['updatePayment'])){
+
+	$cardName = $_POST['cardName'];
+	$cardNumber = $_POST['cardNumber'];
+	$cardExpiry = $_POST['cardExpiry'];
+
+	if($user->updatePayment($cardName, $cardNumber, $cardExpiry, $_SESSION['user']['userId'])){
+		//echo "Payment details updated!";
+		header("Location: dashboard.php"); 
+  	 	die("Redirecting to dashboard.php"); 
+	} 
+	
+}
+$userId = $_SESSION['user']['userId'];
+//card details
+$cardQuery = "SELECT * FROM `payment` WHERE `userId` = '$userId'";
+$cardResult = mysqli_query($conn,$cardQuery);
+$cardRow = mysqli_fetch_array($cardResult);
+
+$cardNumber = $cardRow['cardNumber'];
+$starLength = strlen(substr($cardNumber, 0, strlen($cardNumber)-4));
+$lastFour = substr($cardNumber, -4);
+$partialCardNumber = str_repeat("*", $starLength).$lastFour;
+
+
 print_r($_SESSION['user']);
+
+?>
+<!DOCTYPE html>
+<?php 
+include('includes/head.php');
 ?>
 
 <div class = "container-medium">
@@ -34,29 +63,10 @@ print_r($_SESSION['user']);
 	</section>
 
 	<section>
+
 		<div class = "row">
-			<div class = "col-xs-3">
-				<div class = "panel panel-default">
-					<div class = "panel-body">
-						<table class = "table table-hover table-condensed">
-							<tbody>
-								<tr>
-									<td>Name</td>
-									<td><?php echo $_SESSION['user']['fName']." ".$_SESSION['user']['lName']?></td>
-								</tr>
-								<tr>
-									<td>Email</td>
-									<td><?php echo $_SESSION['user']['email']?></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-				
-			</div>
-			<div class = "col-xs-9">
-				<div class = "row">
-					<div class = "col-xs-6">
+			<div class = "col-xs-12">
+					<div class = "col-xs-3">
 						<a href="browse.php">
 						<div class = "fontAwesome">
 						<span class="fa-stack fa-3x">
@@ -67,7 +77,7 @@ print_r($_SESSION['user']);
 	                	</div>
 	                	</a>
 					</div>
-					<div class = "col-xs-6">
+					<div class = "col-xs-3">
 						<a href="postAuction.php">
 							<div class = "fontAwesome">
 								<span class="fa-stack fa-3x">
@@ -79,9 +89,7 @@ print_r($_SESSION['user']);
 						</a>
 						
 					</div>
-				</div>
-				<div class = "row">
-					<div class = "col-xs-6">
+					<div class = "col-xs-3">
 						<a href="myAuctions.php">
 						<div class = "fontAwesome">
 						<span class="fa-stack fa-3x">
@@ -92,7 +100,7 @@ print_r($_SESSION['user']);
 	                	</div>
 	                	</a>
 					</div>
-					<div class = "col-xs-6">
+					<div class = "col-xs-3">
 						<a href="myBids.php">
 							<div class = "fontAwesome">
 								<span class="fa-stack fa-3x">
@@ -104,8 +112,43 @@ print_r($_SESSION['user']);
 						</a>
 						
 					</div>
-				</div>
 			</div>
+		</div>
+
+		<div class = "row">
+			<div class = "col-xs-6">
+				<h4>Details </h4>
+					<ul class="list-group">
+						<li class = "list-group-item">Name: <?php echo $_SESSION['user']['fName']." ".$_SESSION['user']['lName']?></li>
+						<li class = "list-group-item">Email: <?php echo $_SESSION['user']['email']?></li>
+						<li class = "list-group-item">Card name: <?php echo $cardRow['cardName']?></li>
+						<li class = "list-group-item">Card number: <?php echo $partialCardNumber; ?></li>
+						<li class = "list-group-item">Card expiry date: <?php echo $cardRow['cardExpiry']?></li>
+					</ul>
+			</div>
+			<div class = "col-xs-6">
+				<form role = "form" method = "post" action = "dashboard.php">
+				<h4>Update Payment details </h4>
+				<div class = "form-group">
+					<label>Card name</label>
+					<input type = "text" class = "form-control" name = "cardName" required>
+				</div>
+
+				<div class = "form-group">
+					<label>Card number (13 or 16 digits)</label>
+					<input type="text" pattern="[0-9]{13,16}" inputmode="numeric"  class = "form-control" name = "cardNumber" required>
+				</div>
+
+				<div class = "form-group">
+					<label>Expiry date</label>
+					<input type = "date" class = "form-control" name = "cardExpiry" required>
+				</div>
+
+				<button type = "submit" class = "btn btn-default" name = "updatePayment">Update</button>
+				</form>
+
+			</div>
+			
 		</div>
 		<?php
 		$auction = new Auction($conn);
