@@ -5,8 +5,8 @@ include_once('classes/item.php');
 
 //mysql database variables which we connect to 
     $dbhost = 'localhost';
-    $dbuser = 'root';
-    $dbpass = '';
+    $dbuser = getenv('dbuser');
+    $dbpass = getenv('dbpass');
     $dbname = 'comp3013';
 
     
