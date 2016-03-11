@@ -46,12 +46,25 @@ if(isset($_POST['register'])){
 	$password = $_POST['password'];
 	$email = $_POST['email'];
 
-	//$user = new User($conn);
-	//$user->register($userName, $fName, $lName, $password, $email);
+	$user = new User($conn);
+	$user->register($userName, $fName, $lName, $password, $email);
 
 	//header("Location: index.php"); 
 	//die("Redirecting to: index.php"); 
 	echo "Successfully registered";
+
+	//auto login.
+	$selectQuery = "SELECT * FROM `users` WHERE `userName`='$userName'";
+	$userResult = mysqli_query($conn, $selectQuery);
+	$row = mysqli_fetch_array($userResult);
+	//echo $row['password'];
+	//echo password_verify("jo65tt", '$2y$10$WVSty3ywE3muf');
+	if($user->login($userName, $password)){
+		$_SESSION['user'] = $row; 
+		
+		header("Location: dashboard.php"); 
+	    die("Redirecting to: dashboard.php"); 
+}
 }
 
 ?>
