@@ -53,36 +53,57 @@ if(isset($_POST['postAuction'])){
 	//insert auction into auction table
 	//insert item id here too 
 	//auctionID
-	$datePosted = $date = date('Y-m-d');
-	$endDate = $_POST['endDate'];	
-	$startPrice = $_POST['startPrice'];
-	$resPrice = $_POST['resPrice'];
-	//$count = 0;//number of views
+	$currentDate = new DateTime();
+	$datePosted=$currentDate->format('Y-m-d H:i:s');
 
-	//insert item into item table
-	//insert item id here too 
-	$itemName = $_POST['itemName']; 
-	$description = $_POST['description'];
-	$category = $_POST['category'];
+	$endDate = mysqli_real_escape_string($conn, $_POST['endDate']);
+	$endTime = mysqli_real_escape_string($conn, $_POST['endTime']).":00";
+	//concatenate date and time
+	$endDate = $endDate." ".$endTime;
+	//echo $endDate;
 
-	$auction = new Auction($conn);
-	$item = new Item($conn);
-
-	if($auction->addAuction($datePosted, $endDate, $startPrice, $resPrice, $currentItemID, $userId) && $item->addItem($currentItemID, $itemName, $description, $category, $userId)){
+	//compare enddate to dateposted
+	$endDT = strtotime($endDate);
+	$endDT = date('Y-m-d H:i:s',$endDT);
+	if($endDT < $datePosted){
 		echo '
 			<div class = "alert alert-success">
-				Auction successfully posted
+				End date cant be before current date!
 			</div>
 		';
 	} else {
-		echo '
-			<div class = "alert alert-danger">
-				Error posting auction
-			</div>
-		';
+
+		$startPrice = mysqli_real_escape_string($conn, $_POST['startPrice']);
+		$resPrice = mysqli_real_escape_string($conn, $_POST['resPrice']);
+		//$count = 0;//number of views
+
+		//insert item into item table
+		//insert item id here too 
+		$itemName = mysqli_real_escape_string($conn, $_POST['itemName']); 
+		$description = mysqli_real_escape_string($conn, $_POST['description']);
+		$category = mysqli_real_escape_string($conn, $_POST['category']);
+
+		$auction = new Auction($conn);
+		$item = new Item($conn);
+
+		//need to insert item first as it is the parent table and auction table references items
+		$itemAdd = $item->addItem($currentItemID, $itemName, $description, $category, $userId);
+		$auctionAdd = $auction->addAuction($datePosted, $endDate, $startPrice, $resPrice, $currentItemID, $userId);
+
+		if($itemAdd && $auctionAdd){
+			echo '
+				<div class = "alert alert-success">
+					Auction successfully posted
+				</div>
+			';
+		} else {
+			echo '
+				<div class = "alert alert-danger">
+					Error posting auction
+				</div>
+			';
+		}
 	}
-
-
 }
 
 ?>
@@ -127,8 +148,9 @@ if(isset($_POST['postAuction'])){
 		</div>
 
 		<div class = "form-group">
-			<label>End date</label>
+			<label>End date and time</label>
 			<input type = "date" class = "form-control" name = "endDate" required>
+			<input type = "time" class = "form-control" name = "endTime" required>
 		</div>
 
 

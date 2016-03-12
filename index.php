@@ -14,8 +14,8 @@ if(!empty($_SESSION['user']))
 if(isset($_POST['login'])){
 
 
-	$userName = $_POST['userName'];
-	$password = $_POST['password'];
+	$userName = mysqli_real_escape_string($conn, $_POST['userName']);
+	$password = mysqli_real_escape_string($conn, $_POST['password']);
 
 	$selectQuery = "SELECT * FROM `users` WHERE `userName`='$userName'";
 	$userResult = mysqli_query($conn, $selectQuery);
@@ -40,11 +40,11 @@ if(isset($_POST['login'])){
 
 
 if(isset($_POST['register'])){
-	$userName = $_POST['userName'];
-	$fName = $_POST['fName'];
-	$lName = $_POST['lName'];
-	$password = $_POST['password'];
-	$email = $_POST['email'];
+	$userName = mysqli_real_escape_string($conn,$_POST['userName']);
+	$fName = mysqli_real_escape_string($conn, $_POST['fName']);
+	$lName = mysqli_real_escape_string($conn, $_POST['lName']);
+	$password = mysqli_real_escape_string($conn, $_POST['password']);
+	$email = mysqli_real_escape_string($conn, $_POST['email']);
 
 	$user = new User($conn);
 	$user->register($userName, $fName, $lName, $password, $email);
@@ -61,7 +61,7 @@ if(isset($_POST['register'])){
 	//echo password_verify("jo65tt", '$2y$10$WVSty3ywE3muf');
 	if($user->login($userName, $password)){
 		$_SESSION['user'] = $row; 
-		
+
 		header("Location: dashboard.php"); 
 	    die("Redirecting to: dashboard.php"); 
 }

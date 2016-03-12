@@ -13,10 +13,16 @@ if(empty($_SESSION['user']))
 $userID = $_SESSION['user']['userId'];
 $listCategoryQuery = "SELECT * FROM category";
 $listCateoryResult = mysqli_query($conn, $listCategoryQuery);
+$categoryArray = [];
+while($row = mysqli_fetch_array($listCateoryResult)){
+	$categoryArray[$row['id']] = $row['categoryName'];
+}
+mysqli_data_seek($listCateoryResult,0);
+
 //dont show my own auctions
 if(isset($_GET['category'])){
 	$filter = $_GET['category'];//category in an array
-	$auctionItemQuery = "SELECT auctionID, datePosted, startPrice, endDate, bids, i.itemName, i.description, i.category,c.categoryName FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID INNER JOIN `category` as c on i.category = c.id WHERE a.userID != '$userID' AND i.category IN (";
+	$auctionItemQuery = "SELECT winnerNotified, auctionID, datePosted, startPrice, endDate, bids, i.itemName, i.description, i.category,c.categoryName FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID INNER JOIN `category` as c on i.category = c.id WHERE a.userID != '$userID' AND i.category IN (";
 	//where in is shorthand for where or.
 	foreach ($filter as $category) {
 		$auctionItemQuery.="'$category'".",";
@@ -25,7 +31,7 @@ if(isset($_GET['category'])){
 	$auctionItemQuery.=")";
 	echo $auctionItemQuery;
 } else {
-	$auctionItemQuery = "SELECT auctionID, datePosted, startPrice, endDate, bids, i.itemName, i.description, i.category,c.categoryName FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID INNER JOIN `category` as c on i.category = c.id WHERE a.userID != '$userID'";
+	$auctionItemQuery = "SELECT winnerNotified, auctionID, datePosted, startPrice, endDate, bids, i.itemName, i.description, i.category,c.categoryName FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID INNER JOIN `category` as c on i.category = c.id WHERE a.userID != '$userID'";
 }
 $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error($conn));
 
@@ -54,11 +60,11 @@ include('includes/head.php');
 				if(isset($_GET['category'])){
 					$filter = $_GET['category'];//category is an array
 					if(empty($filter)){
-						echo "<h3>Showing results for the all categories</h3><br>";
+						echo "<h3>Category: All</h3><br>";
 					} else {
-						echo "<h3>Showing results for the ";
+						echo "<h3>Category: ";
 						foreach ($filter as $cat) {
-							echo "$cat, ";
+							echo $categoryArray[$cat].", ";
 						}
 						echo " </h3><br>";
 					}
@@ -107,23 +113,27 @@ include('includes/head.php');
 			<?php
 			mysqli_data_seek($auctionItemResult,0);//return to 0th index
 			while($row = mysqli_fetch_array($auctionItemResult)){
+				//if expired dont show.
+				if(!$row['winnerNotified']){
 
-				$auctionID = $row['auctionID'];
-				$highestBidQuery = "SELECT `bidPrice` FROM `bids` WHERE auctionID = '$auctionID' ORDER BY bidPrice DESC LIMIT 1";
-				$highestBidResult = mysqli_query($conn, $highestBidQuery);
-				$highestBid = mysqli_fetch_array($highestBidResult);
+					$auctionID = $row['auctionID'];
+					$highestBidQuery = "SELECT `bidPrice` FROM `bids` WHERE auctionID = '$auctionID' ORDER BY bidPrice DESC LIMIT 1";
+					$highestBidResult = mysqli_query($conn, $highestBidQuery);
+					$highestBid = mysqli_fetch_array($highestBidResult);
 
-				echo '<tr>';
-				echo '<td>'.$row['itemName'].'</td>';
-				echo '<td>'.$row['datePosted'].'</td>';
-				echo '<td>'.$row['endDate'].'</td>';
-				echo '<td>'.$row['startPrice'].'</td>';
-				echo '<td>'.$row['description'].'</td>';
-				echo '<td>'.$row['categoryName'].'</td>';
-				echo '<td>'.$row['bids'].'</td>';
-				echo '<td>'.$highestBid[0].'</td>';
-				echo '<td><a class = "btn btn-success" href = "placeBid.php?auctionID='.$row['auctionID'].'">Bid</a></td>';
-				echo '</tr>';
+					echo '<tr>';
+					echo '<td>'.$row['itemName'].'</td>';
+					echo '<td>'.$row['datePosted'].'</td>';
+					echo '<td>'.$row['endDate'].'</td>';
+					echo '<td>'.$row['startPrice'].'</td>';
+					echo '<td>'.$row['description'].'</td>';
+					echo '<td>'.$row['categoryName'].'</td>';
+					echo '<td>'.$row['bids'].'</td>';
+					echo '<td>'.$highestBid[0].'</td>';
+					echo '<td><a class = "btn btn-success" href = "placeBid.php?auctionID='.$row['auctionID'].'">Bid</a></td>';
+					echo '</tr>';
+
+				}
 			}
 			?>
 			

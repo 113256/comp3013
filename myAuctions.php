@@ -14,7 +14,7 @@ if(empty($_SESSION['user']))
 }
 $userID = $_SESSION['user']['userId'];
 
-$auctionItemQuery = "SELECT auctionID, datePosted, startPrice, endDate, bids, i.itemName, i.description,c.categoryName FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID INNER JOIN `category` as c on i.category = c.id WHERE a.userID = '$userID'";
+$auctionItemQuery = "SELECT winnerNotified,auctionID, datePosted, startPrice, endDate, bids, i.itemName, i.description,c.categoryName FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID INNER JOIN `category` as c on i.category = c.id WHERE a.userID = '$userID'";
 
 $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error($conn));
 
@@ -43,6 +43,7 @@ $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error(
 			<th>Bids</th>
 			<th>Highest bid</th>
 			<th>View bid report</th>
+			<th>Expired?</th>
 		</thead>
 		<tbody>
 			<?php
@@ -64,6 +65,11 @@ $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error(
 				echo '<td>'.$row['bids'].'</td>';
 				echo '<td>'.$highestBid[0].'</td>';
 				echo '<td><a class = "btn btn-success" href = "bidReport.php?auctionID='.$auctionID.'">View report</a></td>';
+				if($row['winnerNotified']){
+					echo '<td>EXPIRED</td>';
+				} else {
+					echo '<td>Not yet</td>';
+				}
 				echo '</tr>';
 			}
 			?>

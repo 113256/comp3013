@@ -46,6 +46,7 @@ include('includes/head.php');
 			<th>Item name</th>
 			<th>Description</th>
 			<th>End date</th>
+			<th>Expired?</th>
 		</thead>
 		<tbody>
 			<?php
@@ -53,7 +54,7 @@ include('includes/head.php');
 			mysqli_data_seek($myBidResult,0);//return to 0th index
 			while($row = mysqli_fetch_array($myBidResult)){
 				$auctionID = $row['auctionID'];
-				$auctionItemQuery = "SELECT datePosted, startPrice, endDate, bids, i.itemName, i.description FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID WHERE a.auctionID = '$auctionID'";
+				$auctionItemQuery = "SELECT winnerNotified, datePosted, startPrice, endDate, bids, i.itemName, i.description FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID WHERE a.auctionID = '$auctionID'";
 				$auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error($conn));
 				$auctionItemRow = mysqli_fetch_array($auctionItemResult);
 
@@ -69,6 +70,11 @@ include('includes/head.php');
 				echo '<td>'.$auctionItemRow['itemName'].'</td>';
 				echo '<td>'.$auctionItemRow['description'].'</td>';
 				echo '<td>'.$auctionItemRow['endDate'].'</td>';
+				if($auctionItemRow['winnerNotified']){
+					echo '<td>EXPIRED</td>';
+				} else {
+					echo '<td>Not yet</td>';
+				}
 				echo '</tr>';
 			}
 			?>
