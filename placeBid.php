@@ -60,7 +60,7 @@ include('includes/head.php');
 if(isset($_POST['placeBid'])){
 	$userId = $_SESSION['user']['userId'];
 	$bidDate = $date = date('Y-m-d');	
-	$bidPrice = $_POST['bidPrice'];
+	$bidPrice = mysqli_real_escape_string($conn, $_POST['bidPrice']);
 
 	if($bidPrice < $auctionItemRow['startPrice'] || $bidPrice <= $highestBid[0]){
 		echo '

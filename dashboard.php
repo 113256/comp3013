@@ -22,9 +22,9 @@ if(isset($_POST['logout'])){
 
 if(isset($_POST['updatePayment'])){
 
-	$cardName = $_POST['cardName'];
-	$cardNumber = $_POST['cardNumber'];
-	$cardExpiry = $_POST['cardExpiry'];
+	$cardName = mysqli_real_escape_string($conn, $_POST['cardName']);
+	$cardNumber = mysqli_real_escape_string($conn, $_POST['cardNumber']);
+	$cardExpiry = mysqli_real_escape_string($conn, $_POST['cardExpiry']);
 
 	if($user->updatePayment($cardName, $cardNumber, $cardExpiry, $_SESSION['user']['userId'])){
 		//echo "Payment details updated!";
@@ -184,28 +184,31 @@ include('includes/head.php');
 		<tbody>
 			<?php
 			foreach($auctionIdArray as $aID){
-				$auctionItemQuery = "SELECT auctionID, datePosted, startPrice, endDate, bids, i.itemName, i.description, i.category,c.categoryName FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID INNER JOIN `category` as c on i.category = c.id WHERE a.auctionID = '$aID'";
+				$auctionItemQuery = "SELECT winnerNotified, auctionID, datePosted, startPrice, endDate, bids, i.itemName, i.description, i.category,c.categoryName FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID INNER JOIN `category` as c on i.category = c.id WHERE a.auctionID = '$aID'";
 				$auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error($conn));
 
 			
 				$row = mysqli_fetch_array($auctionItemResult);
 
-				$auctionID = $row['auctionID'];
-				$highestBidQuery = "SELECT `bidPrice` FROM `bids` WHERE auctionID = '$auctionID' ORDER BY bidPrice DESC LIMIT 1";
-				$highestBidResult = mysqli_query($conn, $highestBidQuery);
-				$highestBid = mysqli_fetch_array($highestBidResult);
+				if(!$row['winnerNotified']){
 
-				echo '<tr>';
-				echo '<td>'.$row['itemName'].'</td>';
-				echo '<td>'.$row['datePosted'].'</td>';
-				echo '<td>'.$row['endDate'].'</td>';
-				echo '<td>'.$row['startPrice'].'</td>';
-				echo '<td>'.$row['description'].'</td>';
-				echo '<td>'.$row['categoryName'].'</td>';
-				echo '<td>'.$row['bids'].'</td>';
-				echo '<td>'.$highestBid[0].'</td>';
-				echo '<td><a class = "btn btn-success" href = "placeBid.php?auctionID='.$row['auctionID'].'">Bid</a></td>';
-				echo '</tr>';
+					$auctionID = $row['auctionID'];
+					$highestBidQuery = "SELECT `bidPrice` FROM `bids` WHERE auctionID = '$auctionID' ORDER BY bidPrice DESC LIMIT 1";
+					$highestBidResult = mysqli_query($conn, $highestBidQuery);
+					$highestBid = mysqli_fetch_array($highestBidResult);
+
+					echo '<tr>';
+					echo '<td>'.$row['itemName'].'</td>';
+					echo '<td>'.$row['datePosted'].'</td>';
+					echo '<td>'.$row['endDate'].'</td>';
+					echo '<td>'.$row['startPrice'].'</td>';
+					echo '<td>'.$row['description'].'</td>';
+					echo '<td>'.$row['categoryName'].'</td>';
+					echo '<td>'.$row['bids'].'</td>';
+					echo '<td>'.$highestBid[0].'</td>';
+					echo '<td><a class = "btn btn-success" href = "placeBid.php?auctionID='.$row['auctionID'].'">Bid</a></td>';
+					echo '</tr>';
+				}
 			}
 			?>
 			

@@ -43,19 +43,23 @@ class Auction{
 		//$query = "SELECT email FROM users u, bids b WHERE u.userId = b.userId";
 		//select email from users from bids with the same auction id as the auction thats being bid on
 		//$query = "SELECT email FROM `users` as u INNER JOIN `auction` as a on u.userId = a.userId INNER JOIN `bids` as b on a.auctionID = b.auctionID";
-		$query = "SELECT email, c.description,c.itemName FROM `users` as u INNER JOIN (SELECT b.userId,b.auctionID,i.description,i.itemName FROM `bids` as b INNER JOIN `auction` as a on b.auctionID=a.auctionID INNER JOIN `items` as i on a.itemID = i.itemID WHERE b.auctionID = '$auctionID') as c on u.userId = c.userId WHERE c.userId != '$userId'";
+		//ONLY NOTIFY HIGHEST BIDDER
+		$query = "SELECT email, c.description,c.itemName FROM `users` as u INNER JOIN (SELECT b.bidPrice, b.userId,b.auctionID,i.description,i.itemName FROM `bids` as b INNER JOIN `auction` as a on b.auctionID=a.auctionID INNER JOIN `items` as i on a.itemID = i.itemID WHERE b.auctionID = '$auctionID') as c on u.userId = c.userId WHERE c.userId != '$userId' ORDER BY c.bidPrice DESC LIMIT 1";
 		$result = mysqli_query($this->conn, $query) or die(mysqli_error($this->conn));
 		while($row = mysqli_fetch_array($result)){
 			//echo $row['email']."<br>";
 			//send email
+			print_r($row);
 			$to = "113256@gmail.com";
 			$itemDesc = $row['description'];
 			$itemName = $row['itemName'];
 			$subject = "outbid notification";
 			$message = "You have been outbid on ".$itemName." with the description: ".$itemDesc;
+			$source = 'From: auctionServer@example.com';
 
 			//need a mail server
-			//mail($to, $subject, $message);
+			mail($to, $subject, $message,$source);
+
 		}
 	}
 
