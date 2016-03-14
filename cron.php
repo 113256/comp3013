@@ -12,7 +12,7 @@ echo "<br>";
 echo "<br>";
 
 
-$auctionQuery = "SELECT * FROM `auction` as a INNER JOIN `items` as i on a.itemId = i.itemId";
+$auctionQuery = "SELECT * FROM `auction` as a INNER JOIN `items` as i on a.itemId = i.itemId WHERE a.winnerNotified = 0";
 
 $auctionResult = mysqli_query($conn,$auctionQuery);
 while($row = mysqli_fetch_array($auctionResult)){
