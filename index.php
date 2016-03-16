@@ -51,7 +51,6 @@ if(isset($_POST['register'])){
 
 	//header("Location: index.php"); 
 	//die("Redirecting to: index.php"); 
-	echo "Successfully registered";
 
 	//auto login.
 	$selectQuery = "SELECT * FROM `users` WHERE `userName`='$userName'";
