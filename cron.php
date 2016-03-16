@@ -12,7 +12,7 @@ echo "<br>";
 echo "<br>";
 
 
-$auctionQuery = "SELECT * FROM `auction` as a INNER JOIN `items` as i on a.itemId = i.itemId WHERE a.winnerNotified = 0";
+$auctionQuery = "SELECT * FROM `auction` as a INNER JOIN `items` as i on a.itemId = i.itemId INNER JOIN `users` as u on a.userId = u.userId WHERE a.winnerNotified = 0";
 
 $auctionResult = mysqli_query($conn,$auctionQuery);
 while($row = mysqli_fetch_array($auctionResult)){
@@ -42,6 +42,10 @@ while($row = mysqli_fetch_array($auctionResult)){
 		$reservePrice = $row['resPrice'];
 		$itemWon = $highestBid > $reservePrice;
 		$expiredId = $row['auctionID'];
+
+		//mail to user to placed the auction.
+		mailOwner($row['email'], $row['description'], $row['itemName'], "Auction expired", $itemWon);
+
 		if($itemWon){
 			echo "item won! ";
 			//notify user and change ownership of item!
@@ -49,10 +53,10 @@ while($row = mysqli_fetch_array($auctionResult)){
 			//update ownership
 			$winnerId = $bidRow['userId'];
 			$itemWonId = $row['itemID'];
-
 			$ownerQuery = "UPDATE `items` SET `userId`='$winnerId' WHERE itemId = '$itemWonId'";
 			echo $ownerQuery;
 			mysqli_query($conn, $ownerQuery) or die(mysqli_error($conn));
+
 			//update winner notified
 			$updateWinnerQuery = "UPDATE `auction` SET `winnerNotified`= 1 WHERE auctionID = '$expiredId'";
 			mysqli_query($conn, $updateWinnerQuery) or die(mysqli_error($conn));
@@ -84,6 +88,17 @@ function mailUser($to, $itemDesc, $itemName, $subject,$itemWon){
 		$message = "You have won the auction on ".$itemName." with the description: ".$itemDesc;
 	} else {
 		$message = "You have the highest bid but it was not higher than the reserve price. Hence you didn not win the auction on ".$itemName." with the description: ".$itemDesc;
+	}
+	$source = 'From: auctionServer@example.com';
+	mail($to, $subject, $message,$source);
+}
+
+//mail owner of auction
+function mailOwner($to, $itemDesc, $itemName, $subject,$itemWon){
+	if($itemWon){
+		$message = "Your item ".$itemName." with the description: ".$itemDesc." has expired and has been won";
+	} else {
+		$message = "Your item ".$itemName." with the description: ".$itemDesc." has expired but has not been sold as the highest bid is not higher than the reserve price";
 	}
 	$source = 'From: auctionServer@example.com';
 	mail($to, $subject, $message,$source);

@@ -19,6 +19,16 @@ $auctionItemQuery = "SELECT datePosted, datePosted, startPrice, endDate, bids, r
 $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error($conn));
 $auctionItemRow = mysqli_fetch_array($auctionItemResult);
 
+if(isset($_POST['rate'])){
+	$rating = $_POST['rating'];
+
+	if(!empty($rating)){
+		$rowUserId = $_POST['rowUserId'];
+		$updateRatingQuery = "UPDATE `users` SET `rating`= `rating`+'$rating', `noRating` = `noRating`+1 WHERE `userId` = '$rowUserId'";
+		mysqli_query($conn, $updateRatingQuery);
+	}
+}
+
 ?>
 <!DOCTYPE html>
 <?php 
@@ -57,21 +67,36 @@ include('includes/head.php');
 			<th>Bidder</th>
 			<th>Bid date</th>
 			<th>Bid price</th>
-
+			<th>Aggregated rating</th>
+			<th>Rate</th>
 		</thead>
 		<tbody>
 			<?php
 			mysqli_data_seek($bidResult,0);//return to 0th index
 			while($row = mysqli_fetch_array($bidResult)){
 				$rowUserId = $row['userId'];
-				$userNameQuery = "SELECT userName from users WHERE userId = '$rowUserId'";
+				$userNameQuery = "SELECT * from users WHERE userId = '$rowUserId'";
 				$userNameResult = mysqli_query($conn, $userNameQuery);
 				$userName = mysqli_fetch_array($userNameResult);
 
 				echo '<tr>';
 				echo '<td>'.$userName[0].'</td>';
 				echo '<td>'.$row['bidDate'].'</td>';
-				echo '<td>'.$row['bidPrice'].'</td>';		
+				echo '<td>'.$row['bidPrice'].'</td>';	
+				if($userName['rating']!=0){
+					echo '<td>'.round($userName['rating']/$userName['noRating'],1).'</td>';	
+				} else {
+					echo '<td></td>';
+				}	
+				echo '<td>'
+				?> 
+				<form action = "<?php $_SERVER['PHP_SELF'] ?>" method = "post">
+					<input type="number" name="rating" min="1" max="10">
+					<input type="text" name="rowUserId" value = <?php echo $row['userId']; ?> hidden >
+					<button class = "btn btn-success" type = "submit" name = "rate">Rate</button>
+				</form>
+				<?php 
+				echo '</td>';		
 				echo '</tr>';
 			}
 			?>
