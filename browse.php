@@ -130,7 +130,7 @@ include('includes/head.php');
 					echo '<td>'.$row['categoryName'].'</td>';
 					echo '<td>'.$row['bids'].'</td>';
 					echo '<td>'.$highestBid[0].'</td>';
-					echo '<td><a class = "btn btn-success" href = "placeBid.php?auctionID='.$row['auctionID'].'">Bid</a></td>';
+					echo '<td><a class = "btn btn-success" href = "placeBid.php?auctionID='.$row['auctionID'].'">Bid and view other bids</a></td>';
 					echo '</tr>';
 
 				}

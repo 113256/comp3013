@@ -18,7 +18,14 @@ $myBidQuery = "SELECT * FROM `bids` WHERE userId = '$userID'";
 $myBidResult = mysqli_query($conn, $myBidQuery) or die(mysqli_error($conn));
 
 
-
+if(isset($_POST['rate'])){
+	$rating = $_POST['rating'];
+	if(!empty($rating)){
+		$rowUserId = $_POST['rowUserId'];
+		$updateRatingQuery = "UPDATE `users` SET `rating`= `rating`+'$rating', `noRating` = `noRating`+1 WHERE `userId` = '$rowUserId'";
+		mysqli_query($conn, $updateRatingQuery);
+	}
+}
 ?>
 <!DOCTYPE html>
 <?php 
@@ -47,6 +54,9 @@ include('includes/head.php');
 			<th>Description</th>
 			<th>End date</th>
 			<th>Expired?</th>
+			<th>Seller Id</th>
+			<th>Seller rating</th>
+			<th>Rate seller</th>
 		</thead>
 		<tbody>
 			<?php
@@ -54,7 +64,7 @@ include('includes/head.php');
 			mysqli_data_seek($myBidResult,0);//return to 0th index
 			while($row = mysqli_fetch_array($myBidResult)){
 				$auctionID = $row['auctionID'];
-				$auctionItemQuery = "SELECT winnerNotified, datePosted, startPrice, endDate, bids, i.itemName, i.description FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID WHERE a.auctionID = '$auctionID'";
+				$auctionItemQuery = "SELECT u.*,winnerNotified, datePosted, startPrice, endDate, bids, i.itemName, i.description FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID INNER JOIN `users` as u on a.userId = u.userId WHERE a.auctionID = '$auctionID'";
 				$auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error($conn));
 				$auctionItemRow = mysqli_fetch_array($auctionItemResult);
 
@@ -75,6 +85,21 @@ include('includes/head.php');
 				} else {
 					echo '<td>Not yet</td>';
 				}
+				echo '<td>'.$auctionItemRow['userId'].'</td>';
+				if($auctionItemRow['rating']!=0){
+					echo '<td>'.$auctionItemRow['rating']/$auctionItemRow['noRating'].'</td>';	
+				} else {
+					echo '<td></td>';
+				}	
+				echo '<td>'
+				?> 
+				<form action = "<?php $_SERVER['PHP_SELF'] ?>" method = "post">
+					<input type="number" name="rating" min="1" max="10">
+					<input type="text" name="rowUserId" value = <?php echo $auctionItemRow['userId']; ?> hidden >
+					<button class = "btn btn-success" type = "submit" name = "rate">Rate</button>
+				</form>
+				<?php 
+				echo '</td>';
 				echo '</tr>';
 			}
 			?>

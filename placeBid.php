@@ -1,6 +1,8 @@
 <?php include('includes/connect.php');
 error_reporting(E_ALL);
 
+$userId = $_SESSION['user']['userId'];
+
 //session_start();
 if(empty($_SESSION['user'])) 
 { 
@@ -14,6 +16,7 @@ if(empty($_SESSION['user']))
 if(isset($_GET['auctionID'])){
 	$auctionID = $_GET['auctionID'];
 
+
 	//increase no views (viewing traffic)
 	$trafficQuery = "UPDATE `auction` SET noViews = noViews+1 WHERE `auctionID` = '$auctionID'";
 	mysqli_query($conn,$trafficQuery) or die(mysqli_error($conn));
@@ -26,6 +29,13 @@ if(isset($_GET['auctionID'])){
 	$highestBidQuery = "SELECT `bidPrice` FROM `bids` WHERE auctionID = '$auctionID' ORDER BY bidPrice DESC LIMIT 1";
 	$highestBidResult = mysqli_query($conn, $highestBidQuery);
 	$highestBid = mysqli_fetch_array($highestBidResult);
+
+	$highestBidQuery = "SELECT `bidPrice` FROM `bids` WHERE auctionID = '$auctionID' ORDER BY bidPrice DESC LIMIT 1";
+	$highestBidResult = mysqli_query($conn, $highestBidQuery);
+	$highestBid = mysqli_fetch_array($highestBidResult);
+
+	$bidQuery = "SELECT * FROM `bids` WHERE auctionID = '$auctionID' AND `userId` <> '$userId' ORDER BY bidPrice DESC";
+	$bidResult = mysqli_query($conn, $bidQuery) or die(mysqli_error($conn));
 
 } 
 
@@ -126,6 +136,28 @@ if(empty($cardRow)){
 
 	?>
 
+	<h2>Other bids</h2>
+	  <table class="table">
+    <thead>
+      <tr>
+        <th>Bid</th>
+        <th>User ID</th>
+      </tr>
+    </thead>
+    <tbody>
+    	<?php 
+    	while($bidRow = mysqli_fetch_array($bidResult)){
+    		echo '<tr>';
+    			echo '<td>'.$bidRow['bidPrice'] .'</td>';
+    			echo '<td>'.$bidRow['userId'] .'</td>';
+    		echo '</tr>';
+    	}
+    	?>
+    </tbody>
+  </table>
+
+
+	<h2>Place a bid</h2>
 	<form role = "form" method = "post" action = "placeBid.php?auctionID=<?php echo $auctionID;?>">
 
 		<div class = "form-group">
