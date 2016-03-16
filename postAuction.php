@@ -3,7 +3,7 @@
 <?php
 include('includes/head.php');
 error_reporting(E_ALL);
-
+date_default_timezone_set('Europe/London');
 //session_start();
 if(empty($_SESSION['user'])) 
 { 
@@ -53,7 +53,7 @@ if(isset($_POST['postAuction'])){
 	//insert auction into auction table
 	//insert item id here too 
 	//auctionID
-	$currentDate = new DateTime();
+	$currentDate = new DateTime(null, new DateTimeZone('Europe/London'));
 	$datePosted=$currentDate->format('Y-m-d H:i:s');
 
 	$endDate = mysqli_real_escape_string($conn, $_POST['endDate']);

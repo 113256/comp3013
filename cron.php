@@ -1,9 +1,9 @@
 <?php 
-include('includes/connect.php');
+include('includes/connectcron.php');
 //•	cron job- notify winner (if winnerNotified ==0) and set winnerNotified = 1. Also change the item ownership (userID) to the winners’s id. 
 //.  IF PRICE > RESERVE UPDATE WNNER NOTIFED BUT DONT CANGE OWNERSHIP 
 //also notify person who put auction
-
+date_default_timezone_set('Europe/London');
 $currentDate = new DateTime();
 $currentDate=$currentDate->format('Y-m-d H:i:s');
 echo $currentDate;
