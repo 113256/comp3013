@@ -22,7 +22,7 @@ mysqli_data_seek($listCateoryResult,0);
 //dont show my own auctions
 if(isset($_GET['category'])){
 	$filter = $_GET['category'];//category in an array
-	$auctionItemQuery = "SELECT winnerNotified, auctionID, datePosted, startPrice, endDate, bids, i.itemName, i.description, i.category,c.categoryName FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID INNER JOIN `category` as c on i.category = c.id WHERE a.userID != '$userID' AND i.category IN (";
+	$auctionItemQuery = "SELECT u.*,winnerNotified, auctionID, datePosted, startPrice, endDate, bids, i.itemName, i.description, i.category,c.categoryName FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID INNER JOIN `category` as c on i.category = c.id INNER JOIN `users` as u on a.userId = u.userId WHERE a.userID != '$userID' AND i.category IN (";
 	//where in is shorthand for where or.
 	foreach ($filter as $category) {
 		$auctionItemQuery.="'$category'".",";
@@ -31,7 +31,7 @@ if(isset($_GET['category'])){
 	$auctionItemQuery.=")";
 	echo $auctionItemQuery;
 } else {
-	$auctionItemQuery = "SELECT winnerNotified, auctionID, datePosted, startPrice, endDate, bids, i.itemName, i.description, i.category,c.categoryName FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID INNER JOIN `category` as c on i.category = c.id WHERE a.userID != '$userID'";
+	$auctionItemQuery = "SELECT u.*,winnerNotified, auctionID, datePosted, startPrice, endDate, bids, i.itemName, i.description, i.category,c.categoryName FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID INNER JOIN `category` as c on i.category = c.id INNER JOIN `users` as u on a.userId = u.userId WHERE a.userID != '$userID'";
 }
 $auctionItemResult = mysqli_query($conn, $auctionItemQuery) or die(mysqli_error($conn));
 
@@ -107,6 +107,8 @@ include('includes/head.php');
 			<th>Category</th>
 			<th>Bids</th>
 			<th>Highest bid</th>
+			<th>Seller Id</th>
+			<th>Seller rating</th>
 			<th>Place a bid</th>
 		</thead>
 		<tbody>
@@ -130,6 +132,12 @@ include('includes/head.php');
 					echo '<td>'.$row['categoryName'].'</td>';
 					echo '<td>'.$row['bids'].'</td>';
 					echo '<td>'.$highestBid[0].'</td>';
+					echo '<td>'.$row['userId'].'</td>';
+					if($row['rating']!=0){
+						echo '<td>'.round($row['rating']/$row['noRating'],1).'</td>';	
+					} else {
+						echo '<td></td>';
+					}	
 					echo '<td><a class = "btn btn-success" href = "placeBid.php?auctionID='.$row['auctionID'].'">Bid and view other bids</a></td>';
 					echo '</tr>';
 

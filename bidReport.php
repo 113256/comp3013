@@ -84,7 +84,7 @@ include('includes/head.php');
 				echo '<td>'.$row['bidDate'].'</td>';
 				echo '<td>'.$row['bidPrice'].'</td>';	
 				if($userName['rating']!=0){
-					echo '<td>'.$userName['rating']/$userName['noRating'].'</td>';	
+					echo '<td>'.round($userName['rating']/$userName['noRating'],1).'</td>';	
 				} else {
 					echo '<td></td>';
 				}	

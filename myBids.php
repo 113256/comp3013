@@ -87,7 +87,7 @@ include('includes/head.php');
 				}
 				echo '<td>'.$auctionItemRow['userId'].'</td>';
 				if($auctionItemRow['rating']!=0){
-					echo '<td>'.$auctionItemRow['rating']/$auctionItemRow['noRating'].'</td>';	
+					echo '<td>'.round($auctionItemRow['rating']/$auctionItemRow['noRating'],1).'</td>';	
 				} else {
 					echo '<td></td>';
 				}	
