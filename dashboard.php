@@ -45,7 +45,7 @@ $lastFour = substr($cardNumber, -4);
 $partialCardNumber = str_repeat("*", $starLength).$lastFour;
 
 
-print_r($_SESSION['user']);
+//print_r($_SESSION['user']);
 
 ?>
 <!DOCTYPE html>

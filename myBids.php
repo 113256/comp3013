@@ -75,7 +75,11 @@ include('includes/head.php');
 				echo '<tr>';
 				echo '<td>'.$row['bidDate'].'</td>';
 				echo '<td>'.$row['bidPrice'].'</td>';
-				echo '<td>'.$highestBid[0].'</td>';
+				echo '<td>'.$highestBid[0];
+				if($highestBid[0]>$row['bidPrice']){
+					echo "-- OUTBID";
+				}
+				echo'</td>';
 				echo '<td>'.$auctionItemRow['startPrice'].'</td>';
 				echo '<td>'.$auctionItemRow['itemName'].'</td>';
 				echo '<td>'.$auctionItemRow['description'].'</td>';
