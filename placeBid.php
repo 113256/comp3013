@@ -1,6 +1,6 @@
 <?php include('includes/connect.php');
 error_reporting(E_ALL);
-
+date_default_timezone_set('Europe/London');
 $userId = $_SESSION['user']['userId'];
 
 //session_start();

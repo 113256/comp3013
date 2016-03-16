@@ -3,7 +3,7 @@
 <?php
 include('includes/head.php');
 error_reporting(E_ALL);
-
+date_default_timezone_set('Europe/London');
 //session_start();
 if(empty($_SESSION['user'])) 
 { 
