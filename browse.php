@@ -29,7 +29,7 @@ if(isset($_GET['category'])){
 	}
 	$auctionItemQuery = rtrim($auctionItemQuery,",");
 	$auctionItemQuery.=")";
-	echo $auctionItemQuery;
+	//echo $auctionItemQuery;
 } else {
 	$auctionItemQuery = "SELECT u.*,winnerNotified, auctionID, datePosted, startPrice, endDate, bids, i.itemName, i.description, i.category,c.categoryName FROM `auction` AS a INNER JOIN `items` as i on a.itemID = i.itemID INNER JOIN `category` as c on i.category = c.id INNER JOIN `users` as u on a.userId = u.userId WHERE a.userID != '$userID'";
 }
