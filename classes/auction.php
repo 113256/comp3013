@@ -49,8 +49,8 @@ class Auction{
 		while($row = mysqli_fetch_array($result)){
 			//echo $row['email']."<br>";
 			//send email
-			print_r($row);
-			$to = "113256@gmail.com";
+			//print_r($row);
+			$to = $row['email'];
 			$itemDesc = $row['description'];
 			$itemName = $row['itemName'];
 			$subject = "outbid notification";

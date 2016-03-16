@@ -1,5 +1,5 @@
 	<head>
-		<title>Find subtitles for the latest movies and tv shows</title>
+		<title>Auction</title>
 		<!--bootstrap.min.css and bootstrap.css are the same
 		but the min file has all spaces removed hence its faster
 		to load-->
