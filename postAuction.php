@@ -53,7 +53,7 @@ if(isset($_POST['postAuction'])){
 	//insert auction into auction table
 	//insert item id here too 
 	//auctionID
-	$currentDate = new DateTime();
+	$currentDate = new DateTime(null, new DateTimeZone('Europe/London'));
 	$datePosted=$currentDate->format('Y-m-d H:i:s');
 
 	$endDate = mysqli_real_escape_string($conn, $_POST['endDate']);
