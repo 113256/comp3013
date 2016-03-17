@@ -46,7 +46,9 @@ $partialCardNumber = str_repeat("*", $starLength).$lastFour;
 
 
 //print_r($_SESSION['user']);
-
+$userQuery = "SELECT * FROM `users` WHERE `userId` = '$userId'";
+$userResult = mysqli_query($conn, $userQuery) or die(mysqli_error($conn));
+$row = mysqli_fetch_array($userResult);
 ?>
 <!DOCTYPE html>
 <?php 
@@ -121,6 +123,12 @@ include('includes/head.php');
 					<ul class="list-group">
 						<li class = "list-group-item">Name: <?php echo $_SESSION['user']['fName']." ".$_SESSION['user']['lName']?></li>
 						<li class = "list-group-item">Email: <?php echo $_SESSION['user']['email']?></li>
+						<li class = "list-group-item">Rating: <?php if($row['rating']!=0){
+																	echo round($row['rating']/$row['noRating'],1);	
+																} else {
+																	echo '';
+																}
+																?>
 						<li class = "list-group-item">Card name: <?php echo $cardRow['cardName']?></li>
 						<li class = "list-group-item">Card number: <?php echo $partialCardNumber; ?></li>
 						<li class = "list-group-item">Card expiry date: <?php echo $cardRow['cardExpiry']?></li>

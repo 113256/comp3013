@@ -30,10 +30,6 @@ if(isset($_GET['auctionID'])){
 	$highestBidResult = mysqli_query($conn, $highestBidQuery);
 	$highestBid = mysqli_fetch_array($highestBidResult);
 
-	$highestBidQuery = "SELECT `bidPrice` FROM `bids` WHERE auctionID = '$auctionID' ORDER BY bidPrice DESC LIMIT 1";
-	$highestBidResult = mysqli_query($conn, $highestBidQuery);
-	$highestBid = mysqli_fetch_array($highestBidResult);
-
 	$bidQuery = "SELECT * FROM `bids` WHERE auctionID = '$auctionID' AND `userId` <> '$userId' ORDER BY bidPrice DESC";
 	$bidResult = mysqli_query($conn, $bidQuery) or die(mysqli_error($conn));
 
